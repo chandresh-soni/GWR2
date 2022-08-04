@@ -1,8 +1,9 @@
 # include <pappl/pappl.h>
-# include <ppd/ppd.h>
-# include <cupsfilters/log.h>
-# include <cupsfilters/filter.h>
+# include <ppd.h>
+# include <log.h>
+# include <filter.h>
 # include <cups/cups.h>
 # include <string.h>
 # include <limits.h>
+
 
