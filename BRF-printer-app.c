@@ -93,12 +93,12 @@ pcl_callback(
   driver_data->rstartjob          = NULL;
   driver_data->rstartpage         = NULL;
   driver_data->rwrite             = NULL;
-  driver_data->status             = brf_status;
-  driver_data->format             = "application/vnd.hp-postscript";
+  driver_data->status             = brf_status;// to be write
+  driver_data->format             = "application/vnd.cups-paged-brf";
   driver_data->orient_default     = IPP_ORIENT_NONE;
   driver_data->quality_default    = IPP_QUALITY_NORMAL;
-
-  if (!strcmp(driver_name, "generic"))
+/*
+if (!strcmp(driver_name, "generic"))
   {
     strlcpy(driver_data->make_and_model, "HP DeskJet", sizeof(driver_data->make_and_model));
 
@@ -168,7 +168,7 @@ pcl_callback(
       snprintf(driver_data->media_ready[i].type, sizeof(driver_data->media_ready[i].type), "%s", driver_data->type[0]);
     }
   }
-
+*/
   driver_data->media_default = driver_data->media_ready[0];
 
   return (true);
