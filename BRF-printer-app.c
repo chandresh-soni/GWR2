@@ -57,11 +57,11 @@ brf_setup(
 }
 
 //
-// 'pcl_callback()' - PCL callback.
+// 'brf_callback()' - BRF callback.
 //
 
 static bool				   // O - `true` on success, `false` on failure
-pcl_callback(
+brf_callback(
     pappl_system_t       *system,	   // I - System
     const char           *driver_name,   // I - Driver name
     const char           *device_uri,	   // I - Device URI
