@@ -12,7 +12,7 @@
 
 static bool   brf_callback(pappl_system_t *system, const char *driver_name,
 			  const char *device_uri,
-			  pappl_driver_data_t *driver_data,
+			  pappl_pdriver_data_t *driver_data,
 			  ipp_t **driver_attrs, void *data);
 static void   brf_setup(pappl_system_t *system);
 static void   brf_identify(pappl_printer_t *printer, pappl_identify_actions_t actions, const char *message);
