@@ -297,15 +297,7 @@ printer_cb(const char     *device_info,	// I - Device information
   {
     char	name[128],		// Printer name
 		*nameptr;		// Pointer in name
-
-
-    // Zebra puts "Zebra Technologies ZTC" on the front of their printer names,
-    // which is a bit, um, wordy.  Clean up the device info string to use as a
-    // printer name and drop any trailing "(ID)" nonsense if we don't need it.
-    if (!strncasecmp(device_info, "Zebra Technologies ZTC ", 23))
-      snprintf(name, sizeof(name), "Zebra %s", device_info + 23);
-    else
-      papplCopyString(name, device_info, sizeof(name));
+    papplCopyString(name, device_info, sizeof(name));
 
     if ((nameptr = strstr(name, " (")) != NULL)
       *nameptr = '\0';
