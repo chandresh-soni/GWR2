@@ -201,8 +201,6 @@ brf_gen_rendpage(
 
   papplDevicePuts(device, "P1\n");
 
-  if (options->finishings & PAPPL_FINISHINGS_TRIM)
-    papplDevicePuts(device, "C\n");
 
   return (true);
 }
@@ -245,16 +243,8 @@ brf_gen_rstartpage(
 
   papplDevicePuts(device, "\nN\n");
 
-  // print-darkness
-  papplDevicePrintf(device, "D%d\n", 15 * options->print_darkness / 100);
 
-  // print-speed
-  if ((ips = options->print_speed / 2540) > 0)
-    papplDevicePrintf(device, "S%d\n", ips);
-
-  // Set label size...
-  papplDevicePrintf(device, "q%u\n", (options->header.cupsWidth + 7) & ~7U);
-
+ 
   return (true);
 }
 
