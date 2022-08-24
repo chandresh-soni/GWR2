@@ -18,7 +18,7 @@
 
 static const char *autoadd_cb(const char *device_info, const char *device_uri, const char *device_id, void *cbdata);
 static bool	driver_cb(pappl_system_t *system, const char *driver_name, const char *device_uri, const char *device_id, pappl_pr_driver_data_t *data, ipp_t **attrs, void *cbdata);
-static int	match_id(int num_did, cups_option_t *did, const char *match_id);
+//static int	match_id(int num_did, cups_option_t *did, const char *match_id);
 static const char *mime_cb(const unsigned char *header, size_t headersize, void *data);
 static bool	printer_cb(const char *device_info, const char *device_uri, const char *device_id, pappl_system_t *system);
 static pappl_system_t *system_cb(int num_options, cups_option_t *options, void *data);
@@ -85,7 +85,7 @@ autoadd_cb(const char *device_info,	// I - Device information/name (not used)
     if ((make = cupsGetOption("MANU", num_did, did)) == NULL)
       make = cupsGetOption("MFG", num_did, did);
 
-  if (make && !strncasecmp(make, "Zebra", 5))
+  if (make && !strncasecmp(make, "Generic", 5))
     lprintZPLQueryDriver((pappl_system_t *)cbdata, device_uri, name, sizeof(name));
 
   // Then loop through the driver list to find the best match...
@@ -175,24 +175,14 @@ driver_cb(
   data->input_face_up  = true;
   data->output_face_up = true;
 
-  // Standard icons...
-  data->icons[0].data    = brf_small_png;
-  data->icons[0].datalen = sizeof(brf_small_png);
-  data->icons[1].data    = brf_png;
-  data->icons[1].datalen = sizeof(brf_png);
-  data->icons[2].data    = brf_large_png;
-  data->icons[2].datalen = sizeof(brf_large_png);
 
   // Test page callback...
   data->testpage_cb = lprintTestPageCB;
 
   // Use the corresponding sub-driver callback to set things up...
-  if (!strncmp(driver_name, "dymo_", 5))
-    return (lprintDYMO(system, driver_name, device_uri, device_id, data, attrs, cbdata));
-  else if (!strncmp(driver_name, "epl2_", 5))
+  if (!strncmp(driver_name, "gen_", 5))
     return (lprintEPL2(system, driver_name, device_uri, device_id, data, attrs, cbdata));
-  else if (!strncmp(driver_name, "zpl_", 4))
-    return (lprintZPL(system, driver_name, device_uri, device_id, data, attrs, cbdata));
+ 
   else
     return (false);
 }
@@ -204,7 +194,7 @@ driver_cb(
 // The score is 2 for each exact match and 1 for a partial match in a comma-
 // delimited field.  Any non-match results in a score of 0.
 //
-
+/*
 static int				// O - Score
 match_id(int           num_did,		// I - Number of device ID key/value pairs
          cups_option_t *did,		// I - Device ID key/value pairs
@@ -267,6 +257,7 @@ match_id(int           num_did,		// I - Number of device ID key/value pairs
 
   return (score);
 }
+*/
 
 
 //
