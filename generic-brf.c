@@ -10,127 +10,32 @@
 // Local globals...
 //
 
-static const char * const lprint_epl2_2inch_media[] =
-{					// Supported 2 inch media sizes
-  "oe_1.25x0.25-label_1.25x0.25in",
-  "oe_1.25x2.25-label_1.25x2.25in",
-
-  "oe_1.5x0.25-label_1.5x0.25in",
-  "oe_1.5x0.5-label_1.5x0.5in",
-  "oe_1.5x1-label_1.5x1in",
-  "oe_1.5x2-label_1.5x2in",
-
-  "oe_2x0.37-label_2x0.37in",
-  "oe_2x0.5-label_2x0.5in",
-  "oe_2x1-label_2x1in",
-  "oe_2x1.25-label_2x1.25in",
-  "oe_2x2-label_2x2in",
-  "oe_2x3-label_2x3in",
-  "oe_2x4-label_2x4in",
-  "oe_2x5.5-label_2x5.5in",
-
-  "roll_max_2x100in",
-  "roll_min_0.75x0.25in"
-};
-static const char * const lprint_epl2_4inch_media[] =
-{					// Supported 4 inch media sizes
-  "oe_1.25x0.25-label_1.25x0.25in",
-  "oe_1.25x2.25-label_1.25x2.25in",
-
-  "oe_1.5x0.25-label_1.5x0.25in",
-  "oe_1.5x0.5-label_1.5x0.5in",
-  "oe_1.5x1-label_1.5x1in",
-  "oe_1.5x2-label_1.5x2in",
-
-  "oe_2x0.37-label_2x0.37in",
-  "oe_2x0.5-label_2x0.5in",
-  "oe_2x1-label_2x1in",
-  "oe_2x1.25-label_2x1.25in",
-  "oe_2x2-label_2x2in",
-  "oe_2x3-label_2x3in",
-  "oe_2x4-label_2x4in",
-  "oe_2x5.5-label_2x5.5in",
-
-  "oe_2.25x0.5-label_2.25x0.5in",
-  "oe_2.25x1.25-label_2.25x1.25in",
-  "oe_30859-paint-can-label_2.25x3.125in",
-  "oe_2.25x4-label_2.25x4in",
-  "oe_2.25x5.5-label_2.25x5.5in",
-
-  "oe_2.38x5.5-label_2.38x5.5in",
-
-  "oe_2.5x1-label_2.5x1in",
-  "oe_2.5x2-label_2.5x2in",
-
-  "oe_2.75x1.25-label_2.75x1.25in",
-
-  "oe_2.9x1-label_2.9x1in",
-
-  "oe_3x1-label_3x1in",
-  "oe_3x1.25-label_3x1.25in",
-  "oe_3x2-label_3x2in",
-  "oe_3x3-label_3x3in",
-  "oe_3x5-label_3x5in",
-
-  "oe_3.25x2-label_3.25x2in",
-  "oe_3.25x5-label_3.25x5in",
-  "oe_3.25x5.5-label_3.25x5.5in",
-  "oe_3.25x5.83-label_3.25x5.83in",
-  "oe_3.25x7.83-label_3.25x7.83in",
-
-  "oe_3.5x1-label_3.5x1in",
-
-  "oe_4x1-label_4x1in",
-  "oe_4x2-label_4x2in",
-  "oe_4x3-label_4x3in",
-  "oe_4x4-label_4x4in",
-  "oe_4x5-label_4x5in",
-  "oe_4x6-label_4x6in",
-  "oe_4x6.5-label_4x6.5in",
-  "oe_4x13-label_4x13in",
-
-/*  "oe_6x1-label_6x1in",
-  "oe_6x2-label_6x2in",
-  "oe_6x3-label_6x3in",
-  "oe_6x4-label_6x4in",
-  "oe_6x5-label_6x5in",
-  "oe_6x6-label_6x6in",
-  "oe_6x6.5-label_6x6.5in",
-  "oe_6x13-label_6x13in",
-
-  "oe_8x1-label_8x1in",
-  "oe_8x2-label_8x2in",
-  "oe_8x3-label_8x3in",
-  "oe_8x4-label_8x4in",
-  "oe_8x5-label_8x5in",
-  "oe_8x6-label_8x6in",
-  "oe_8x6.5-label_8x6.5in",
-  "oe_8x13-label_8x13in",*/
-
-  "roll_max_4x100in",
-  "roll_min_0.75x0.25in"
-};
-
 
 //
 // Local functions...
 //
 
-static bool	lprint_epl2_printfile(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);
-static bool	lprint_epl2_rendjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);
-static bool	lprint_epl2_rendpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);
-static bool	lprint_epl2_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);
-static bool	lprint_epl2_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);
-static bool	lprint_epl2_rwriteline(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned y, const unsigned char *line);
-static bool	lprint_epl2_status(pappl_printer_t *printer);
+static bool	brf_gen_printfile(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);
+static bool	brf_gen_rendjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);
+static bool	brf_gen_rendpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);
+static bool	brf_gen_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);
+static bool	brf_gen_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);
+static bool	brf_gen_status(pappl_printer_t *printer);
 
 
+////
+// EPL2 driver for LPrint, a Label Printer Application
+//
+// Copyright © 2019-2021 by Michael R Sweet.
+//
+// Licensed under Apache License v2.0.  See the file "LICENSE" for more
+// information.
 //
 // 'lprintInitEPL2()' - Initialize the driver.
 //
 
 bool					// O - `true` on success, `false` on error
-lprintEPL2(
+brf_gen(
     pappl_system_t         *system,	// I - System
     const char             *driver_name,// I - Driver name
     const char             *device_uri,	// I - Device URI
@@ -139,14 +44,13 @@ lprintEPL2(
     ipp_t                  **attrs,	// O - Pointer to driver attributes
     void                   *cbdata)	// I - Callback data (not used)
 {
-  data->printfile_cb  = lprint_epl2_printfile;
-  data->rendjob_cb    = lprint_epl2_rendjob;
-  data->rendpage_cb   = lprint_epl2_rendpage;
-  data->rstartjob_cb  = lprint_epl2_rstartjob;
-  data->rstartpage_cb = lprint_epl2_rstartpage;
-  data->rwriteline_cb = lprint_epl2_rwriteline;
-  data->status_cb     = lprint_epl2_status;
-  data->format        = "application/vnd.eltron-epl";
+  data->printfile_cb  = brf_gen_printfile;
+  data->rendjob_cb    = brf_gen_rendjob;
+  data->rendpage_cb   = brf_gen_rendpage;
+  data->rstartjob_cb  = brf_gen_rstartjob;
+  data->rstartpage_cb = brf_gen_rstartpage;
+  data->status_cb     = brf_gen_status;
+  data->format        = "application/vnd.cups-paged-brf";
 
   data->num_resolution = 1;
 
@@ -227,7 +131,7 @@ lprintEPL2(
 //
 
 static bool				// O - `true` on success, `false` on failure
-lprint_epl2_printfile(
+brf_gen_printfile(
     pappl_job_t        *job,		// I - Job
     pappl_pr_options_t *options,	// I - Job options
     pappl_device_t     *device)		// I - Output device
@@ -268,7 +172,7 @@ lprint_epl2_printfile(
 //
 
 static bool				// O - `true` on success, `false` on failure
-lprint_epl2_rendjob(
+brf_gen_rendjob(
     pappl_job_t        *job,		// I - Job
     pappl_pr_options_t *options,	// I - Job options
     pappl_device_t     *device)		// I - Output device
@@ -286,7 +190,7 @@ lprint_epl2_rendjob(
 //
 
 static bool				// O - `true` on success, `false` on failure
-lprint_epl2_rendpage(
+brf_gen_rendpage(
     pappl_job_t        *job,		// I - Job
     pappl_pr_options_t *options,	// I - Job options
     pappl_device_t     *device,		// I - Output device
@@ -309,7 +213,7 @@ lprint_epl2_rendpage(
 //
 
 static bool				// O - `true` on success, `false` on failure
-lprint_epl2_rstartjob(
+brf_gen_rstartjob(
     pappl_job_t        *job,		// I - Job
     pappl_pr_options_t *options,	// I - Job options
     pappl_device_t     *device)		// I - Output device
@@ -327,7 +231,7 @@ lprint_epl2_rstartjob(
 //
 
 static bool				// O - `true` on success, `false` on failure
-lprint_epl2_rstartpage(
+brf_gen_rstartpage(
     pappl_job_t        *job,		// I - Job
     pappl_pr_options_t *options,	// I - Job options
     pappl_device_t     *device,		// I - Output device
@@ -355,35 +259,6 @@ lprint_epl2_rstartpage(
 }
 
 
-//
-// 'lprint_epl2_rwriteline()' - Write a raster line.
-//
-
-static bool				// O - `true` on success, `false` on failure
-lprint_epl2_rwriteline(
-    pappl_job_t         *job,		// I - Job
-    pappl_pr_options_t  *options,	// I - Job options
-    pappl_device_t      *device,	// I - Output device
-    unsigned            y,		// I - Line number
-    const unsigned char *line)		// I - Line
-{
-  if (line[0] || memcmp(line, line + 1, options->header.cupsBytesPerLine - 1))
-  {
-    unsigned		i;		// Looping var
-    const unsigned char	*lineptr;	// Pointer into line
-    unsigned char	buffer[300],	// Buffer (big enough for 8" at 300dpi)
-			*bufptr;	// Pointer into buffer
-
-    for (i = options->header.cupsBytesPerLine, lineptr = line, bufptr = buffer; i > 0; i --)
-      *bufptr++ = ~*lineptr++;
-
-    papplDevicePrintf(device, "GW0,%u,%u,1\n", y, options->header.cupsBytesPerLine);
-    papplDeviceWrite(device, buffer, options->header.cupsBytesPerLine);
-    papplDevicePuts(device, "\n");
-  }
-
-  return (true);
-}
 
 
 //
@@ -391,7 +266,7 @@ lprint_epl2_rwriteline(
 //
 
 static bool				// O - `true` on success, `false` on failure
-lprint_epl2_status(
+brf_gen_status(
     pappl_printer_t *printer)		// I - Printer
 {
   (void)printer;
