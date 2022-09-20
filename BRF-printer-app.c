@@ -1,17 +1,18 @@
-//
-// Main entry for LPrint, a Label Printer Application
-//
-// Copyright © 2019-2021 by Michael R Sweet.
-//
-// Licensed under Apache License v2.0.  See the file "LICENSE" for more
-// information.
-//
+
 
 //
 // Include necessary headers...
 //
 
 #include <pappl/pappl.h>
+#include "config.h"
+
+
+#  define BRF_TESTPAGE_MIMETYPE	"application/vnd.cups-paged-brf"
+
+
+extern bool	brf_gen(pappl_system_t *system, const char *driver_name, const char *device_uri, const char *device_id, pappl_pr_driver_data_t *data, ipp_t **attrs, void *cbdata);
+
 //
 // Local functions...
 //
@@ -37,7 +38,7 @@ static char			brf_statefile[1024];
 
 
 //
-// 'main()' - Main entry for LPrint.
+// 'main()' - Main entry for BRF.
 //
 
 int					// O - Exit status
@@ -45,8 +46,8 @@ main(int  argc,				// I - Number of command-line arguments
      char *argv[])			// I - Command-line arguments
 {
   return (papplMainloop(argc, argv,
-                        brf_VERSION,
-                        "Copyright &copy; 2019-2021 by Michael R Sweet. All Rights Reserved.",
+                        NULL,
+                        NULL,
                         (int)(sizeof(brf_drivers) / sizeof(brf_drivers[0])),
                         brf_drivers, autoadd_cb, driver_cb,
                         /*subcmd_name*/NULL, /*subcmd_cb*/NULL,
@@ -85,9 +86,7 @@ autoadd_cb(const char *device_info,	// I - Device information/name (not used)
     if ((make = cupsGetOption("MANU", num_did, did)) == NULL)
       make = cupsGetOption("MFG", num_did, did);
 
-  if (make && !strncasecmp(make, "Generic", 5))
-    lprintZPLQueryDriver((pappl_system_t *)cbdata, device_uri, name, sizeof(name));
-
+  
   // Then loop through the driver list to find the best match...
   for (i = 0; i < (int)(sizeof(brf_drivers) / sizeof(brf_drivers[0])); i ++)
   {
@@ -145,21 +144,13 @@ driver_cb(
     }
   }
 
-  // AirPrint version...
-  data->num_features = 1;
-  data->features[0]  = "airprint-2.1";
+  // Pages per minute 
+  data->ppm = 5;
 
-  // Pages per minute (interpret as "labels per minute")
-  data->ppm = 60;
-
-  // "printer-kind" values...
-  data->kind = PAPPL_KIND_LABEL;
-
+ 
   // Color values...
-  data->color_supported   = PAPPL_COLOR_MODE_AUTO | PAPPL_COLOR_MODE_MONOCHROME;
-  data->color_default     = PAPPL_COLOR_MODE_MONOCHROME;
-  data->raster_types      = PAPPL_PWG_RASTER_TYPE_BLACK_1 | PAPPL_PWG_RASTER_TYPE_BLACK_8 | PAPPL_PWG_RASTER_TYPE_SGRAY_8;
-  data->force_raster_type = PAPPL_PWG_RASTER_TYPE_BLACK_1;
+  
+  data->color_default   = PAPPL_COLOR_MODE_MONOCHROME;
 
   // "print-quality-default" value...
   data->quality_default = IPP_QUALITY_NORMAL;
@@ -171,94 +162,17 @@ driver_cb(
   // "orientation-requested-default" value...
   data->orient_default = IPP_ORIENT_NONE;
 
-  // Media capabilities...
-  data->input_face_up  = true;
-  data->output_face_up = true;
-
 
   // Test page callback...
   data->testpage_cb = lprintTestPageCB;
 
   // Use the corresponding sub-driver callback to set things up...
   if (!strncmp(driver_name, "gen_", 5))
-    return (lprintEPL2(system, driver_name, device_uri, device_id, data, attrs, cbdata));
+    return (brf_gen(system, driver_name, device_uri, device_id, data, attrs, cbdata));
  
   else
     return (false);
 }
-
-
-//
-// 'match_id()' - Compare two IEEE-1284 device IDs and return a score.
-//
-// The score is 2 for each exact match and 1 for a partial match in a comma-
-// delimited field.  Any non-match results in a score of 0.
-//
-/*
-static int				// O - Score
-match_id(int           num_did,		// I - Number of device ID key/value pairs
-         cups_option_t *did,		// I - Device ID key/value pairs
-         const char    *match_id)	// I - Driver's device ID match string
-{
-  int		i,			// Looping var
-		score = 0,		// Score
-		num_mid;		// Number of match ID key/value pairs
-  cups_option_t	*mid,			// Match ID key/value pairs
-		*current;		// Current key/value pair
-  const char	*value,			// Device ID value
-		*valptr;		// Pointer into value
-
-
-  // Parse the matching device ID into key/value pairs...
-  if ((num_mid = papplDeviceParseID(match_id, &mid)) == 0)
-    return (0);
-
-  // Loop through the match pairs to find matches (or not)
-  for (i = num_mid, current = mid; i > 0; i --, current ++)
-  {
-    if ((value = cupsGetOption(current->name, num_did, did)) == NULL)
-    {
-      // No match
-      score = 0;
-      break;
-    }
-
-    if (!strcasecmp(current->value, value))
-    {
-      // Full match!
-      score += 2;
-    }
-    else if ((valptr = strstr(value, current->value)) != NULL)
-    {
-      // Possible substring match, check
-      size_t mlen = strlen(current->value);
-					// Length of match value
-      if ((valptr == value || valptr[-1] == ',') && (!valptr[mlen] || valptr[mlen] == ','))
-      {
-        // Partial match!
-        score ++;
-      }
-      else
-      {
-        // No match
-        score = 0;
-        break;
-      }
-    }
-    else
-    {
-      // No match
-      score = 0;
-      break;
-    }
-  }
-
-  cupsFreeOptions(num_mid, mid);
-
-  return (score);
-}
-*/
-
 
 //
 // 'mime_cb()' - MIME typing callback...
@@ -269,12 +183,12 @@ mime_cb(const unsigned char *header,	// I - Header data
         size_t              headersize,	// I - Size of header data
         void                *cbdata)	// I - Callback data (not used)
 {
-  char	testpage[] = brf_TESTPAGE_HEADER;
+  char	testpage[] = BRF_TESTPAGE_HEADER;
 					// Test page file header
 
 
   if (headersize >= sizeof(testpage) && !memcmp(header, testpage, sizeof(testpage)))
-    return (brf_TESTPAGE_MIMETYPE);
+    return (BRF_TESTPAGE_MIMETYPE);
   else
     return (NULL);
 }
@@ -357,15 +271,8 @@ system_cb(
 					// System options
   static pappl_version_t versions[1] =	// Software versions
   {
-    { "LPrint", "", brf_VERSION, { brf_MAJOR_VERSION, brf_MINOR_VERSION, brf_PATCH_VERSION, 0 } }
-  };
+    { "BRF", "", 1.0, { NULL, NULL, NULL, 0 } }};
 
-
-  (void)data;
-
-  // Enable/disable TLS...
-  if ((val = cupsGetOption("tls", num_options, options)) != NULL && !strcmp(val, "no"))
-    soptions |= PAPPL_SOPTIONS_NO_TLS;
 
   // Parse standard log and server options...
   if ((val = cupsGetOption("log-level", num_options, options)) != NULL)
@@ -382,7 +289,7 @@ system_cb(
       loglevel = PAPPL_LOGLEVEL_DEBUG;
     else
     {
-      fprintf(stderr, "lprint: Bad log-level value '%s'.\n", val);
+      fprintf(stderr, "BRF: Bad log-level value '%s'.\n", val);
       return (NULL);
     }
   }
@@ -397,7 +304,7 @@ system_cb(
   {
     if (!isdigit(*val & 255))
     {
-      fprintf(stderr, "lprint: Bad server-port value '%s'.\n", val);
+      fprintf(stderr, "BRF: Bad server-port value '%s'.\n", val);
       return (NULL);
     }
     else
@@ -407,62 +314,55 @@ system_cb(
   // State file...
   if ((val = getenv("SNAP_DATA")) != NULL)
   {
-    snprintf(brf_statefile, sizeof(brf_statefile), "%s/lprint.conf", val);
+    snprintf(brf_statefile, sizeof(brf_statefile), "%s/BRF.conf", val);
   }
   else if ((val = getenv("XDG_DATA_HOME")) != NULL)
   {
-    snprintf(brf_statefile, sizeof(brf_statefile), "%s/.lprint.conf", val);
+    snprintf(brf_statefile, sizeof(brf_statefile), "%s/.BRF.conf", val);
   }
 #ifdef _WIN32
   else if ((val = getenv("USERPROFILE")) != NULL)
   {
-    snprintf(brf_statefile, sizeof(brf_statefile), "%s/AppData/Local/lprint.conf", val);
+    snprintf(brf_statefile, sizeof(brf_statefile), "%s/AppData/Local/BRF.conf", val);
   }
   else
   {
-    papplCopyString(brf_statefile, "/lprint.ini", sizeof(brf_statefile));
+    papplCopyString(brf_statefile, "/BRF.ini", sizeof(brf_statefile));
   }
 #else
   else if ((val = getenv("HOME")) != NULL)
   {
-    snprintf(brf_statefile, sizeof(brf_statefile), "%s/.lprint.conf", val);
+    snprintf(brf_statefile, sizeof(brf_statefile), "%s/.BRF.conf", val);
   }
   else
   {
-    papplCopyString(brf_statefile, "/etc/lprint.conf", sizeof(brf_statefile));
+    papplCopyString(brf_statefile, "/etc/BRF.conf", sizeof(brf_statefile));
   }
 #endif // _WIN32
 
   // Create the system object...
-  if ((system = papplSystemCreate(soptions, system_name ? system_name : "LPrint", port, "_print,_universal", cupsGetOption("spool-directory", num_options, options), logfile ? logfile : "-", loglevel, cupsGetOption("auth-service", num_options, options), /* tls_only */false)) == NULL)
+  if ((system = papplSystemCreate(soptions, system_name ? system_name : "BRF", port, "_print,_universal", cupsGetOption("spool-directory", num_options, options), logfile ? logfile : "-", loglevel, cupsGetOption("auth-service", num_options, options), /* tls_only */false)) == NULL)
     return (NULL);
 
   papplSystemAddListeners(system, NULL);
   papplSystemSetHostName(system, hostname);
 
   papplSystemSetMIMECallback(system, mime_cb, NULL);
-  papplSystemAddMIMEFilter(system, brf_TESTPAGE_MIMETYPE, "image/pwg-raster", lprintTestFilterCB, NULL);
+  papplSystemAddMIMEFilter(system, BRF_TESTPAGE_MIMETYPE, "image/pwg-raster", lprintTestFilterCB, NULL);
 
   papplSystemSetPrinterDrivers(system, (int)(sizeof(brf_drivers) / sizeof(brf_drivers[0])), brf_drivers, autoadd_cb, /*create_cb*/NULL, driver_cb, system);
 
-  papplSystemAddResourceData(system, "/favicon.png", "image/png", brf_small_png, sizeof(brf_small_png));
-  papplSystemAddResourceData(system, "/navicon.png", "image/png", brf_png, sizeof(brf_png));
-  papplSystemAddResourceString(system, "/de.strings", "text/strings", brf_de_strings);
-  papplSystemAddResourceString(system, "/en.strings", "text/strings", brf_en_strings);
-  papplSystemAddResourceString(system, "/es.strings", "text/strings", brf_es_strings);
-  papplSystemAddResourceString(system, "/fr.strings", "text/strings", brf_fr_strings);
-  papplSystemAddResourceString(system, "/it.strings", "text/strings", brf_it_strings);
-
+  
   papplSystemSetFooterHTML(system, "Copyright &copy; 2019-2021 by Michael R Sweet. All rights reserved.");
   papplSystemSetSaveCallback(system, (pappl_save_cb_t)papplSystemSaveState, (void *)brf_statefile);
   papplSystemSetVersions(system, (int)(sizeof(versions) / sizeof(versions[0])), versions);
 
-  fprintf(stderr, "lprint: statefile='%s'\n", brf_statefile);
+  fprintf(stderr, "BRF: statefile='%s'\n", brf_statefile);
 
   if (!papplSystemLoadState(system, brf_statefile))
   {
     // No old state, use defaults and auto-add printers...
-    papplSystemSetDNSSDName(system, system_name ? system_name : "LPrint");
+    papplSystemSetDNSSDName(system, system_name ? system_name : "BRF");
 
     papplLog(system, PAPPL_LOGLEVEL_INFO, "Auto-adding printers...");
     papplDeviceList(PAPPL_DEVTYPE_USB, (pappl_device_cb_t)printer_cb, system, papplLogDevice, system);
