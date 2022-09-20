@@ -23,16 +23,7 @@ static bool	brf_gen_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pa
 static bool	brf_gen_status(pappl_printer_t *printer);
 
 
-////
-// EPL2 driver for LPrint, a Label Printer Application
-//
-// Copyright © 2019-2021 by Michael R Sweet.
-//
-// Licensed under Apache License v2.0.  See the file "LICENSE" for more
-// information.
-//
-// 'lprintInitEPL2()' - Initialize the driver.
-//
+
 
 bool					// O - `true` on success, `false` on error
 brf_gen(
