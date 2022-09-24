@@ -22,6 +22,23 @@ static bool	brf_gen_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pap
 static bool	brf_gen_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);
 static bool	brf_gen_status(pappl_printer_t *printer);
 
+static const char * const brf_generic_media[] =
+{       // Supported media sizes for Generic BRF printers
+  //to be done
+  // "na_letter_8.5x11in",
+  // "na_legal_8.5x14in",
+  // "executive_7x10in",
+  // "na_tabloid_11x17in",
+  // "iso_a3_11.7x16.5in",
+  // "iso_a4_8.3x11.7in",
+  // "iso_a5_5.8x8.3in",
+  // "jis_b5_7.2x10.1in",
+  // "env_b5_6.9x9.8in",
+  // "env_10_4.125x9.5in",
+  // "env_c5_6.4x9in",
+  // "env_dl_8.66x4.33in",
+  // "env_monarch_3.875x7.5in"
+};
 
 
 
@@ -58,67 +75,47 @@ brf_gen(
 
   data->x_default = data->y_default = data->x_resolution[0];
 
-  if (strstr(driver_name, "-cutter"))
-    data->finishings |= PAPPL_FINISHINGS_TRIM;
-
-  if (!strncmp(driver_name, "epl2_2inch-", 16))
-  {
-    // 2 inch printer...
-    data->num_media = (int)(sizeof(lprint_epl2_2inch_media) / sizeof(lprint_epl2_2inch_media[0]));
-    memcpy(data->media, lprint_epl2_2inch_media, sizeof(lprint_epl2_2inch_media));
-
-    papplCopyString(data->media_default.size_name, "oe_2x3-label_2x3in", sizeof(data->media_default.size_name));
-    data->media_default.size_width  = 2 * 2540;
-    data->media_default.size_length = 3 * 2540;
-  }
-  else
-  {
-    // 4 inch printer...
-    data->num_media = (int)(sizeof(lprint_epl2_4inch_media) / sizeof(lprint_epl2_4inch_media[0]));
-    memcpy(data->media, lprint_epl2_4inch_media, sizeof(lprint_epl2_4inch_media));
-
-    papplCopyString(data->media_default.size_name, "na_index-4x6_4x6in", sizeof(data->media_default.size_name));
-    data->media_default.size_width  = 4 * 2540;
-    data->media_default.size_length = 6 * 2540;
-  }
+  
+  data->num_media = (int)(sizeof(brf_generic_media) / sizeof(brf_generic_media[0]));
+  memcpy(data->media, brf_generic_media, sizeof(brf_generic_media));
 
   data->bottom_top = data->left_right = 1;
+  // to be done
+  // data->num_source = 3;
+  //   data->source[0]  = "tray-1";
+  //   data->source[1]  = "manual";
+  //   data->source[2]  = "envelope";
 
-  data->num_source = 1;
-  data->source[0]  = "main-roll";
+  // data->num_type = 5;
+  //   data->type[0] = "stationery";
+  //   data->type[1] = "bond";
+  //   data->type[2] = "special";
+  //   data->type[3] = "transparency";
+  //   data->type[4] = "photographic-glossy";
 
-  data->num_type = 3;
-  data->type[0]  = "continuous";
-  data->type[1]  = "labels";
-  data->type[2]  = "labels-continuous";
+  
 
   data->media_default.bottom_margin = data->bottom_top;
   data->media_default.left_margin   = data->left_right;
   data->media_default.right_margin  = data->left_right;
-  papplCopyString(data->media_default.source, "main-roll", sizeof(data->media_default.source));
+
   data->media_default.top_margin = data->bottom_top;
-  data->media_default.top_offset = 0;
-  data->media_default.tracking   = PAPPL_MEDIA_TRACKING_MARK;
-  papplCopyString(data->media_default.type, "labels", sizeof(data->media_default.type));
+
 
   data->media_ready[0] = data->media_default;
 
-  data->mode_configured = PAPPL_LABEL_MODE_TEAR_OFF;
-  data->mode_configured = PAPPL_LABEL_MODE_APPLICATOR | PAPPL_LABEL_MODE_CUTTER | PAPPL_LABEL_MODE_CUTTER_DELAYED | PAPPL_LABEL_MODE_KIOSK | PAPPL_LABEL_MODE_PEEL_OFF | PAPPL_LABEL_MODE_PEEL_OFF_PREPEEL | PAPPL_LABEL_MODE_REWIND | PAPPL_LABEL_MODE_RFID | PAPPL_LABEL_MODE_TEAR_OFF;
 
   data->speed_default      = 0;
   data->speed_supported[0] = 2540;
   data->speed_supported[1] = 6 * 2540;
 
-  data->darkness_configured = 50;
-  data->darkness_supported  = 30;
 
   return (true);
 }
 
 
 //
-// 'lprint_epl2_print()' - Print a file.
+// 'Brf_generic_print()' - Print a file.
 //
 
 static bool				// O - `true` on success, `false` on failure
@@ -159,7 +156,7 @@ brf_gen_printfile(
 
 
 //
-// 'lprint_epl2_rendjob()' - End a job.
+// 'Brf_generic_rendjob()' - End a job.
 //
 
 static bool				// O - `true` on success, `false` on failure
@@ -177,7 +174,7 @@ brf_gen_rendjob(
 
 
 //
-// 'lprint_epl2_rendpage()' - End a page.
+// 'Brf_generic_rendpage()' - End a page.
 //
 
 static bool				// O - `true` on success, `false` on failure
@@ -198,7 +195,7 @@ brf_gen_rendpage(
 
 
 //
-// 'lprint_epl2_rstartjob()' - Start a job.
+// 'Brf_generic_rstartjob()' - Start a job.
 //
 
 static bool				// O - `true` on success, `false` on failure
@@ -216,7 +213,7 @@ brf_gen_rstartjob(
 
 
 //
-// 'lprint_epl2_rstartpage()' - Start a page.
+// 'Brf_generic_rstartpage()' - Start a page.
 //
 
 static bool				// O - `true` on success, `false` on failure
@@ -243,7 +240,7 @@ brf_gen_rstartpage(
 
 
 //
-// 'lprint_epl2_status()' - Get current printer status.
+// 'Brf_generic_status()' - Get current printer status.
 //
 
 static bool				// O - `true` on success, `false` on failure
