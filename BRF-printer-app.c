@@ -7,7 +7,7 @@
 #include <pappl/pappl.h>
 #include "config.h"
 
-
+# define BRF_TESTPAGE_HEADER	"T*E*S*T*P*A*G*E*"
 #  define BRF_TESTPAGE_MIMETYPE	"application/vnd.cups-paged-brf"
 
 
@@ -19,7 +19,7 @@ extern bool	brf_gen(pappl_system_t *system, const char *driver_name, const char 
 
 static const char *autoadd_cb(const char *device_info, const char *device_uri, const char *device_id, void *cbdata);
 static bool	driver_cb(pappl_system_t *system, const char *driver_name, const char *device_uri, const char *device_id, pappl_pr_driver_data_t *data, ipp_t **attrs, void *cbdata);
-//static int	match_id(int num_did, cups_option_t *did, const char *match_id);
+static int	match_id(int num_did, cups_option_t *did, const char *match_id);
 static const char *mime_cb(const unsigned char *header, size_t headersize, void *data);
 static bool	printer_cb(const char *device_info, const char *device_uri, const char *device_id, pappl_system_t *system);
 static pappl_system_t *system_cb(int num_options, cups_option_t *options, void *data);
@@ -74,7 +74,7 @@ autoadd_cb(const char *device_info,	// I - Device information/name (not used)
   cups_option_t	*did;			// Device ID key/value pairs
   const char	*make,			// Manufacturer name
 		*best_name = NULL;	// Best driver
-  char		name[1024] = "";	// Driver name to match
+ 
 
 
   (void)device_info;
@@ -90,12 +90,7 @@ autoadd_cb(const char *device_info,	// I - Device information/name (not used)
   // Then loop through the driver list to find the best match...
   for (i = 0; i < (int)(sizeof(brf_drivers) / sizeof(brf_drivers[0])); i ++)
   {
-    if (!strcmp(name, brf_drivers[i].name))
-    {
-      // Matching driver name always the best match...
-      best_name = brf_drivers[i].name;
-      break;
-    }
+ 
 
     if (brf_drivers[i].device_id)
     {
@@ -116,6 +111,72 @@ autoadd_cb(const char *device_info,	// I - Device information/name (not used)
 }
 
 
+
+//
+// 'match_id()' - Compare two IEEE-1284 device IDs and return a score.
+//
+// The score is 2 for each exact match and 1 for a partial match in a comma-
+// delimited field.  Any non-match results in a score of 0.
+//
+
+static int				// O - Score
+match_id(int           num_did,		// I - Number of device ID key/value pairs
+         cups_option_t *did,		// I - Device ID key/value pairs
+         const char    *match_id)	// I - Driver's device ID match string
+{
+  int		i,			// Looping var
+		score = 0,		// Score
+		num_mid;		// Number of match ID key/value pairs
+  cups_option_t	*mid,			// Match ID key/value pairs
+		*current;		// Current key/value pair
+  const char	*value,			// Device ID value
+		*valptr;		// Pointer into value
+
+
+  // Parse the matching device ID into key/value pairs...
+  if ((num_mid = papplDeviceParseID(match_id, &mid)) == 0)
+    return (0);
+
+  // Loop through the match pairs to find matches (or not)
+  for (i = num_mid, current = mid; i > 0; i --, current ++)
+  {
+    if ((value = cupsGetOption(current->name, num_did, did)) == NULL)
+    {
+      // No match
+      score = 0;
+      break;
+    }
+
+    if (!strcasecmp(current->value, value))
+    {
+      // Full match!
+      score += 2;
+    }
+    else if ((valptr = strstr(value, current->value)) != NULL)
+    {
+      // Possible substring match, check
+      size_t mlen = strlen(current->value);
+					// Length of match value
+      if ((valptr == value || valptr[-1] == ',') && (!valptr[mlen] || valptr[mlen] == ','))
+      {
+        // Partial match!
+        score ++;
+      }
+      else
+      {
+        // No match
+        score = 0;
+        break;
+      }
+    }
+    else
+    {
+      // No match
+      score = 0;
+      break;
+    }
+  }
+}
 
 //
 // 'driver_cb()' - Main driver callback.
@@ -164,10 +225,10 @@ driver_cb(
 
 
   // Test page callback...
-  data->testpage_cb = lprintTestPageCB;
+ // data->testpage_cb = lprintTestPageCB;
 
   // Use the corresponding sub-driver callback to set things up...
-  if (!strncmp(driver_name, "gen_", 5))
+  if (!strncmp(driver_name, "gen_", 4))
     return (brf_gen(system, driver_name, device_uri, device_id, data, attrs, cbdata));
  
   else
@@ -348,7 +409,7 @@ system_cb(
   papplSystemSetHostName(system, hostname);
 
   papplSystemSetMIMECallback(system, mime_cb, NULL);
-  papplSystemAddMIMEFilter(system, BRF_TESTPAGE_MIMETYPE, "image/pwg-raster", lprintTestFilterCB, NULL);
+  //papplSystemAddMIMEFilter(system, BRF_TESTPAGE_MIMETYPE, "image/pwg-raster", lprintTestFilterCB, NULL);
 
   papplSystemSetPrinterDrivers(system, (int)(sizeof(brf_drivers) / sizeof(brf_drivers[0])), brf_drivers, autoadd_cb, /*create_cb*/NULL, driver_cb, system);
 
