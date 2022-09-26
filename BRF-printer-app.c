@@ -5,7 +5,7 @@
 //
 
 #include <pappl/pappl.h>
-#include "config.h"
+
 
 # define BRF_TESTPAGE_HEADER	"T*E*S*T*P*A*G*E*"
 #  define BRF_TESTPAGE_MIMETYPE	"application/vnd.cups-paged-brf"

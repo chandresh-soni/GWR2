@@ -6,10 +6,8 @@
 // Include necessary headers...
 //
 
-#  include "config.h"
 #  include <pappl/pappl.h>
-#  include <pappl-retrofit/base.h>
-
+#include<generic-brf.h>
 
 
 
