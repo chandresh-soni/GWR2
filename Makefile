@@ -66,9 +66,9 @@ install:	$(TARGETS)
 	cp BRF-printer-app.1 $(mandir)/man1
 	
 
-BRF-printer-app:	BRF-printer-app.o
+BRF-printer-app:	BRF-printer-app.o 
 	echo "Linking $@..."
-	$(CC) $(LDFLAGS) -o $@ BRF-printer-app.o $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ BRF-printer-app.o generic-brf.o $(LIBS)
 
 $(OBJS):	 Makefile
 

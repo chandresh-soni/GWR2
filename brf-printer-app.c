@@ -46,7 +46,7 @@ main(int  argc,				// I - Number of command-line arguments
      char *argv[])			// I - Command-line arguments
 {
   return (papplMainloop(argc, argv,
-                        NULL,
+                        VERSION,
                         NULL,
                         (int)(sizeof(brf_drivers) / sizeof(brf_drivers[0])),
                         brf_drivers, autoadd_cb, driver_cb,
