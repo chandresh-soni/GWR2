@@ -72,7 +72,7 @@ install:	$(TARGETS)
 
 	
 
-brf-printer-app:	brf-printer-app.o generic-brf.o
+brf-printer-app:	$(OBJS)
 	echo "Linking $@..."
 	$(CC) $(LDFLAGS) -o $@ brf-printer-app.o generic-brf.o $(LIBS)
 
