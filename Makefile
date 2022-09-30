@@ -38,9 +38,9 @@ OPTIM		=	-Os -g
 # Targets...
 OBJS		=	\
 			generic-brf.o \
-			BRF-printer-app.o
+			brf-printer-app.o
 TARGETS		=	\
-			BRF-printer-app
+			brf-printer-app
 
 
 # General build rules...
@@ -60,15 +60,21 @@ clean:
 install:	$(TARGETS)
 	echo "Installing program to $(bindir)..."
 	mkdir -p $(bindir)
-	cp BRF-printer-app $(bindir)
+	cp brf-printer-app $(bindir)
 	echo "Installing documentation to $(mandir)..."
 	mkdir -p $(mandir)/man1
-	cp BRF-printer-app.1 $(mandir)/man1
+	cp brf-printer-app.1 $(mandir)/man1
+	if pkg-config --exists systemd; then \
+		echo "Installing systemd service to $(unitdir)..."; \
+		mkdir -p $(unitdir); \
+		cp brf-printer-app.service $(unitdir); \
+	fi
+
 	
 
-BRF-printer-app:	BRF-printer-app.o 
+brf-printer-app:	brf-printer-app.o generic-brf.o
 	echo "Linking $@..."
-	$(CC) $(LDFLAGS) -o $@ BRF-printer-app.o generic-brf.o $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ brf-printer-app.o generic-brf.o $(LIBS)
 
 $(OBJS):	 Makefile
 
