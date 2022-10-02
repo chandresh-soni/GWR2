@@ -14,7 +14,7 @@
 .SILENT:
 
 # Version and directories...
-VERSION		=	1.2
+VERSION		=	1
 prefix		=	$(DESTDIR)/usr/local
 includedir	=	$(prefix)/include
 bindir		=	$(prefix)/bin
