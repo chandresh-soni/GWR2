@@ -7,8 +7,8 @@
 #include <pappl/pappl.h>
 
 
-# define BRF_TESTPAGE_HEADER	"T*E*S*T*P*A*G*E*"
-#  define BRF_TESTPAGE_MIMETYPE	"application/vnd.cups-paged-brf"
+# define brf_TESTPAGE_HEADER	"T*E*S*T*P*A*G*E*"
+#  define brf_TESTPAGE_MIMETYPE	"application/vnd.cups-paged-brf"
 
 
 extern bool	brf_gen(pappl_system_t *system, const char *driver_name, const char *device_uri, const char *device_id, pappl_pr_driver_data_t *data, ipp_t **attrs, void *cbdata);
@@ -31,14 +31,16 @@ static pappl_system_t *system_cb(int num_options, cups_option_t *options, void *
 
 static pappl_pr_driver_t	brf_drivers[] =
 {					// Driver list
-#include "generic-brf.h"
+{ "gen_brf",        "Generic",
+  NULL, NULL },
+
 };
 static char			brf_statefile[1024];
 					// State file
 
 
 //
-// 'main()' - Main entry for BRF.
+// 'main()' - Main entry for brf.
 //
 
 int					// O - Exit status
@@ -87,8 +89,8 @@ autoadd_cb(const char *device_info,	// I - Device information/name (not used)
       make = cupsGetOption("MFG", num_did, did);
 
   
-  // Then loop through the driver list to find the best match...
-  for (i = 0; i < (int)(sizeof(brf_drivers) / sizeof(brf_drivers[0])); i ++)
+  // // Then loop through the driver list to find the best match...
+  // for (i = 0; i < (int)(sizeof(brf_drivers) / sizeof(brf_drivers[0])); i ++)
   {
  
 
@@ -102,7 +104,7 @@ autoadd_cb(const char *device_info,	// I - Device information/name (not used)
         best_name  = brf_drivers[i].name;
       }
     }
-  }
+   }
 
   // Clean up and return...
   cupsFreeOptions(num_did, did);
@@ -215,6 +217,7 @@ driver_cb(
 
   // "print-quality-default" value...
   data->quality_default = IPP_QUALITY_NORMAL;
+  driver_data->orient_default  = IPP_ORIENT_NONE;
 
   // "sides" values...
   data->sides_supported = PAPPL_SIDES_ONE_SIDED;
@@ -244,12 +247,12 @@ mime_cb(const unsigned char *header,	// I - Header data
         size_t              headersize,	// I - Size of header data
         void                *cbdata)	// I - Callback data (not used)
 {
-  char	testpage[] = BRF_TESTPAGE_HEADER;
+  char	testpage[] = brf_TESTPAGE_HEADER;
 					// Test page file header
 
 
   if (headersize >= sizeof(testpage) && !memcmp(header, testpage, sizeof(testpage)))
-    return (BRF_TESTPAGE_MIMETYPE);
+    return (brf_TESTPAGE_MIMETYPE);
   else
     return (NULL);
 }
@@ -332,7 +335,7 @@ system_cb(
 					// System options
   static pappl_version_t versions[1] =	// Software versions
   {
-    { "BRF", "", 1.0, { NULL, NULL, NULL, 0 } }};
+    { "brf", "", 1.0, { NULL, NULL, NULL, 0 } }};
 
 
   // Parse standard log and server options...
@@ -350,7 +353,7 @@ system_cb(
       loglevel = PAPPL_LOGLEVEL_DEBUG;
     else
     {
-      fprintf(stderr, "BRF: Bad log-level value '%s'.\n", val);
+      fprintf(stderr, "brf: Bad log-level value '%s'.\n", val);
       return (NULL);
     }
   }
@@ -365,7 +368,7 @@ system_cb(
   {
     if (!isdigit(*val & 255))
     {
-      fprintf(stderr, "BRF: Bad server-port value '%s'.\n", val);
+      fprintf(stderr, "brf: Bad server-port value '%s'.\n", val);
       return (NULL);
     }
     else
@@ -375,41 +378,41 @@ system_cb(
   // State file...
   if ((val = getenv("SNAP_DATA")) != NULL)
   {
-    snprintf(brf_statefile, sizeof(brf_statefile), "%s/BRF.conf", val);
+    snprintf(brf_statefile, sizeof(brf_statefile), "%s/brf.conf", val);
   }
   else if ((val = getenv("XDG_DATA_HOME")) != NULL)
   {
-    snprintf(brf_statefile, sizeof(brf_statefile), "%s/.BRF.conf", val);
+    snprintf(brf_statefile, sizeof(brf_statefile), "%s/.brf.conf", val);
   }
 #ifdef _WIN32
   else if ((val = getenv("USERPROFILE")) != NULL)
   {
-    snprintf(brf_statefile, sizeof(brf_statefile), "%s/AppData/Local/BRF.conf", val);
+    snprintf(brf_statefile, sizeof(brf_statefile), "%s/AppData/Local/brf.conf", val);
   }
   else
   {
-    papplCopyString(brf_statefile, "/BRF.ini", sizeof(brf_statefile));
+    papplCopyString(brf_statefile, "/brf.ini", sizeof(brf_statefile));
   }
 #else
   else if ((val = getenv("HOME")) != NULL)
   {
-    snprintf(brf_statefile, sizeof(brf_statefile), "%s/.BRF.conf", val);
+    snprintf(brf_statefile, sizeof(brf_statefile), "%s/.brf.conf", val);
   }
   else
   {
-    papplCopyString(brf_statefile, "/etc/BRF.conf", sizeof(brf_statefile));
+    papplCopyString(brf_statefile, "/etc/brf.conf", sizeof(brf_statefile));
   }
 #endif // _WIN32
 
   // Create the system object...
-  if ((system = papplSystemCreate(soptions, system_name ? system_name : "BRF", port, "_print,_universal", cupsGetOption("spool-directory", num_options, options), logfile ? logfile : "-", loglevel, cupsGetOption("auth-service", num_options, options), /* tls_only */false)) == NULL)
+  if ((system = papplSystemCreate(soptions, system_name ? system_name : "brf", port, "_print,_universal", cupsGetOption("spool-directory", num_options, options), logfile ? logfile : "-", loglevel, cupsGetOption("auth-service", num_options, options), /* tls_only */false)) == NULL)
     return (NULL);
 
   papplSystemAddListeners(system, NULL);
   papplSystemSetHostName(system, hostname);
 
   papplSystemSetMIMECallback(system, mime_cb, NULL);
-  //papplSystemAddMIMEFilter(system, BRF_TESTPAGE_MIMETYPE, "image/pwg-raster", lprintTestFilterCB, NULL);
+  //papplSystemAddMIMEFilter(system, brf_TESTPAGE_MIMETYPE, "image/pwg-raster", lprintTestFilterCB, NULL);
 
   papplSystemSetPrinterDrivers(system, (int)(sizeof(brf_drivers) / sizeof(brf_drivers[0])), brf_drivers, autoadd_cb, /*create_cb*/NULL, driver_cb, system);
 
@@ -418,12 +421,12 @@ system_cb(
   papplSystemSetSaveCallback(system, (pappl_save_cb_t)papplSystemSaveState, (void *)brf_statefile);
   papplSystemSetVersions(system, (int)(sizeof(versions) / sizeof(versions[0])), versions);
 
-  fprintf(stderr, "BRF: statefile='%s'\n", brf_statefile);
+  fprintf(stderr, "brf: statefile='%s'\n", brf_statefile);
 
   if (!papplSystemLoadState(system, brf_statefile))
   {
     // No old state, use defaults and auto-add printers...
-    papplSystemSetDNSSDName(system, system_name ? system_name : "BRF");
+    papplSystemSetDNSSDName(system, system_name ? system_name : "brf");
 
     papplLog(system, PAPPL_LOGLEVEL_INFO, "Auto-adding printers...");
     papplDeviceList(PAPPL_DEVTYPE_USB, (pappl_device_cb_t)printer_cb, system, papplLogDevice, system);

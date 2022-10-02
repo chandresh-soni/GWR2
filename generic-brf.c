@@ -24,20 +24,12 @@ static bool	brf_gen_status(pappl_printer_t *printer);
 
 static const char * const brf_generic_media[] =
 {       // Supported media sizes for Generic BRF printers
-  //to be done
-  // "na_letter_8.5x11in",
-  // "na_legal_8.5x14in",
-  // "executive_7x10in",
-  // "na_tabloid_11x17in",
-  // "iso_a3_11.7x16.5in",
-  // "iso_a4_8.3x11.7in",
-  // "iso_a5_5.8x8.3in",
-  // "jis_b5_7.2x10.1in",
-  // "env_b5_6.9x9.8in",
-  // "env_10_4.125x9.5in",
-  // "env_c5_6.4x9in",
-  // "env_dl_8.66x4.33in",
-  // "env_monarch_3.875x7.5in"
+  "110x115/11x11.5",
+  "110x120/11x12",
+  "110x170/11x17",
+  "115x110/11.5x11",
+  "120x120/12x12",
+  "A4TF/A4 Tractor Feed"
 };
 
 
@@ -61,17 +53,11 @@ brf_gen(
   data->format        = "application/vnd.cups-paged-brf";
 
   data->num_resolution = 1;
+  data->x_resolution[0] = 200;
+  data->y_resolution[0] = 200;
 
-  if (strstr(driver_name, "-203dpi"))
-  {
-    data->x_resolution[0] = 203;
-    data->y_resolution[0] = 203;
-  }
-  else
-  {
-    data->x_resolution[0] = 300;
-    data->y_resolution[0] = 300;
-  }
+  // data->x_resolution[1] = 300;
+  // data->y_resolution[1] = 300;
 
   data->x_default = data->y_default = data->x_resolution[0];
 
@@ -80,21 +66,7 @@ brf_gen(
   memcpy(data->media, brf_generic_media, sizeof(brf_generic_media));
 
   data->bottom_top = data->left_right = 1;
-  // to be done
-  // data->num_source = 3;
-  //   data->source[0]  = "tray-1";
-  //   data->source[1]  = "manual";
-  //   data->source[2]  = "envelope";
-
-  // data->num_type = 5;
-  //   data->type[0] = "stationery";
-  //   data->type[1] = "bond";
-  //   data->type[2] = "special";
-  //   data->type[3] = "transparency";
-  //   data->type[4] = "photographic-glossy";
-
   
-
   data->media_default.bottom_margin = data->bottom_top;
   data->media_default.left_margin   = data->left_right;
   data->media_default.right_margin  = data->left_right;
@@ -105,9 +77,7 @@ brf_gen(
   data->media_ready[0] = data->media_default;
 
 
-  data->speed_default      = 0;
-  data->speed_supported[0] = 2540;
-  data->speed_supported[1] = 6 * 2540;
+
 
 
   return (true);
