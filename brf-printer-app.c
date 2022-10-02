@@ -217,7 +217,7 @@ driver_cb(
 
   // "print-quality-default" value...
   data->quality_default = IPP_QUALITY_NORMAL;
-  driver_data->orient_default  = IPP_ORIENT_NONE;
+  data->orient_default  = IPP_ORIENT_NONE;
 
   // "sides" values...
   data->sides_supported = PAPPL_SIDES_ONE_SIDED;
