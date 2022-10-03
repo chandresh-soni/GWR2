@@ -1,28 +1,21 @@
-.\"
-.\" HP Printer Application man page
-.\"
-.\" Copyright © 2020-2022 by Michael R Sweet
-.\"
-.\" Licensed under Apache License v2.0.  See the file "LICENSE" for more
-.\" information.
-.\"
-.TH hp-printer-app 1 "hp-printer-app" "2022-04-24" "Michael R Sweet"
+
+.TH brf-printer-app 1 "brf-printer-app" "2022-04-24" "chandresh"
 .SH NAME
-hp-printer-app \- hp printer application
+brf-printer-app \- braille printer application
 .SH SYNOPSIS
-.B hp-printer-app
+.B brf-printer-app
 [
 .I SUB-COMMAND
 ] [ OPTIONS ] [ FILES ]
 .SH DESCRIPTION
-.B hp-printer-app
+.B brf-printer-app
 is a printer application that can be run standalone or as a dedicated IPP Everywhere network service.
-.B hp-printer-app
+.B brf-printer-app
 supports printing JPEG images, PNG images, Apple/PWG raster files, and printer-specific files to USB and network PCL printers.
 If no sub-command is specified, "submit" is assumed.
 .SH SUB-COMMANDS
 The following sub-commands are recognized by
-.B hp-printer-app:
+.B brf-printer-app:
 .TP 5
 .B add
 Add a printer queue.
@@ -67,7 +60,7 @@ Show the status of a printer or all printers.
 Submit a file for printing.
 .SH OPTIONS
 The following options are recognized by
-.B hp-printer-app:
+.B brf-printer-app:
 .TP 5
 .B \-a
 Cancels all jobs ("cancel" sub-command).
@@ -83,7 +76,7 @@ Specifies the job ID ("cancel" sub-command).
 .TP 5
 \fB\-m \fIDRIVER-NAME\fR
 Specifies the driver name ("add" sub-command).
-.B hp-printer-app
+.B brf-printer-app
 supports the "pcl_deskjet" (HP DeskJet, OfficeJet, and Photosmart printers), "pcl_laserjet" (HP LaserJet printers), and "pcl_generic" (PCL-compatible laser printers from other vendors) driver names.
 .TP 5
 \fB\-n \fICOPIES\fR
@@ -91,17 +84,17 @@ Specifies the number of copies.
 .TP 5
 \fB\-o media=\fISIZE-NAME\fR
 Specifies the paper size.
-.B hp-printer-app
+.B brf-printer-app
 supports custom PWG "self-describing" media size names of the form "custom_name_WIDTHxLENGTHin" (size in inches) and "custom_name_WIDTHxLENGTHmm" (size in millimeters) as well as the following standard sizes: "na_ledger_11x17in", "na_legal_8.5x14in", "na_letter_8.5x11in", "na_executive_7x10in", "iso_a3_297x420mm" "iso_a4_210x297mm", "iso_a5_148x210mm", "jis_b5_182x257mm", "iso_b5_176x250mm", "na_number-10_4.125x9.5in", "iso_c5_162x229mm", "iso_dl_110x220mm", "na_monarch_3.875x7.5in".
 .TP 5
 \fB\-o media-source=\fITRAY-NAME\fR
 Specifies the paper tray.
-.B hp-printer-app
+.B brf-printer-app
 supports the following trays: "default" (default/auto tray), "manual" (manual feed), "envelope", "tray-1", "tray-2", "tray-3", or "tray-4", depending on the printer.
 .TP 5
 \fB\-o media-type=\fITYPE-NAME\fR
 Specifies the paper type.
-.B hp-printer-app
+.B brf-printer-app
 supports the following types: "stationery" (plain paper), "stationery-inkjet" (inkjet paper), "stationery-letterhead" (letterhead paper), "envelope", "transparency", and "photographic" (photo paper of different kinds), depending on the printer.
 .TP 5
 .B \-o orientation-requested=portrait
@@ -190,52 +183,52 @@ Specifies a "socket:" or "usb:" device ("add" sub-command).
 Add a PCL laser printer "laser" at IP address 11.22.33.44:
 
 .nf
-hp-printer-app add -v socket://11.22.33.44 -m pcl_laserjet -d laser
+brf-printer-app add -v socket://11.22.33.44 -m pcl_laserjet -d laser
 .fi
 
 Print a PCL file to the printer:
 
 .nf
-hp-printer-app -d laser filename.pcl
+brf-printer-app -d laser filename.pcl
 .fi
 
 Print a photo to US Letter media:
 
 .nf
-hp-printer-app -d laser -o media=na_letter_8.5x11in -o print-quality=high photo.jpg
+brf-printer-app -d laser -o media=na_letter_8.5x11in -o print-quality=high photo.jpg
 .fi
 
 List supported options:
 
 .nf
-hp-printer-app options
+brf-printer-app options
 .fi
 
 List queued jobs:
 
 .nf
-hp-printer-app jobs
+brf-printer-app jobs
 .fi
 
 List configured printers:
 
 .nf
-hp-printer-app printers
+brf-printer-app printers
 .fi
 
 Show status of server:
 
 .nf
-hp-printer-app status
+brf-printer-app status
 .fi
 
 List network and USB printers that can be added:
 
 .nf
-hp-printer-app devices
+brf-printer-app devices
 .fi
 
 .SH SEE ALSO
-https://www.msweet.org/hp-printer-app
+https://www.msweet.org/brf-printer-app
 .SH COPYRIGHT
 Copyright \[co] 2019-2022 by Michael R Sweet.

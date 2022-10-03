@@ -2,9 +2,10 @@
 
 //
 // Include necessary headers...
-//
+#include <strings.h>
 
 #include <pappl/pappl.h>
+
 
 
 # define brf_TESTPAGE_HEADER	"T*E*S*T*P*A*G*E*"
@@ -31,7 +32,7 @@ static pappl_system_t *system_cb(int num_options, cups_option_t *options, void *
 
 static pappl_pr_driver_t	brf_drivers[] =
 {					// Driver list
-{ "gen_brf",        "Generic",
+{ "gen_brf",  "Generic",
   NULL, NULL },
 
 };
@@ -208,12 +209,13 @@ driver_cb(
   }
 
   // Pages per minute 
-  data->ppm = 5;
+  data->ppm = 60;
 
  
   // Color values...
-  
+  data->color_supported   = PAPPL_COLOR_MODE_AUTO | PAPPL_COLOR_MODE_MONOCHROME;
   data->color_default   = PAPPL_COLOR_MODE_MONOCHROME;
+  data->raster_types  = PAPPL_PWG_RASTER_TYPE_BLACK_8; // to be done just guess
 
   // "print-quality-default" value...
   data->quality_default = IPP_QUALITY_NORMAL;
@@ -335,7 +337,7 @@ system_cb(
 					// System options
   static pappl_version_t versions[1] =	// Software versions
   {
-    { "brf", "", 1.0, { NULL, NULL, NULL, 0 } }};
+    { "brf", "", 1.0, 1.0}};
 
 
   // Parse standard log and server options...

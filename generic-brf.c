@@ -21,15 +21,23 @@ static bool	brf_gen_rendpage(pappl_job_t *job, pappl_pr_options_t *options, papp
 static bool	brf_gen_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);
 static bool	brf_gen_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);
 static bool	brf_gen_status(pappl_printer_t *printer);
+static bool	brf_gen_rwriteline(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned y, const unsigned char *line);
 
-static const char * const brf_generic_media[] =
+static const char * const brf_gen_media[] =
 {       // Supported media sizes for Generic BRF printers
-  "110x115/11x11.5",
-  "110x120/11x12",
-  "110x170/11x17",
-  "115x110/11.5x11",
-  "120x120/12x12",
-  "A4TF/A4 Tractor Feed"
+  "na_ledger_11x17in",
+  "na_legal_8.5x14in",
+  "na_letter_8.5x11in",
+  "na_executive_7x10in",
+  "iso_a3_297x420mm",
+  "iso_a4_210x297mm",
+  "iso_a5_148x210mm",
+  "jis_b5_182x257mm",
+  "iso_b5_176x250mm",
+  "na_number-10_4.125x9.5in",
+  "iso_c5_162x229mm",
+  "iso_dl_110x220mm",
+  "na_monarch_3.875x7.5in"
 };
 
 
@@ -49,22 +57,25 @@ brf_gen(
   data->rendpage_cb   = brf_gen_rendpage;
   data->rstartjob_cb  = brf_gen_rstartjob;
   data->rstartpage_cb = brf_gen_rstartpage;
+  data->rwriteline_cb = brf_gen_rwriteline;
   data->status_cb     = brf_gen_status;
   data->format        = "application/vnd.cups-paged-brf";
 
   data->num_resolution = 1;
   data->x_resolution[0] = 200;
   data->y_resolution[0] = 200;
-
   // data->x_resolution[1] = 300;
   // data->y_resolution[1] = 300;
 
   data->x_default = data->y_default = data->x_resolution[0];
 
   
-  data->num_media = (int)(sizeof(brf_generic_media) / sizeof(brf_generic_media[0]));
-  memcpy(data->media, brf_generic_media, sizeof(brf_generic_media));
-
+  data->num_media = (int)(sizeof(brf_gen_media) / sizeof(brf_gen_media[0]));
+  memcpy(data->media, brf_gen_media, sizeof(brf_gen_media));
+  
+    papplCopyString(data->media_default.size_name,"iso_a4_210x297mm", sizeof(data->media_default.size_name));
+    data->media_default.size_width  = 1 * 2480;
+    data->media_default.size_length = 1 * 3580;
   data->bottom_top = data->left_right = 1;
   
   data->media_default.bottom_margin = data->bottom_top;
@@ -75,10 +86,6 @@ brf_gen(
 
 
   data->media_ready[0] = data->media_default;
-
-
-
-
 
   return (true);
 }
@@ -177,6 +184,34 @@ brf_gen_rstartjob(
   (void)job;
   (void)options;
   (void)device;
+
+  return (true);
+}
+//
+// 'brf_gen_rwriteline()' - Write a raster line.
+//
+static bool				// O - `true` on success, `false` on failure
+brf_gen_rwriteline(
+    pappl_job_t         *job,		// I - Job
+    pappl_pr_options_t  *options,	// I - Job options
+    pappl_device_t      *device,	// I - Output device
+    unsigned            y,		// I - Line number
+    const unsigned char *line)		// I - Line
+{
+  if (line[0] || memcmp(line, line + 1, options->header.cupsBytesPerLine - 1))
+  {
+    unsigned		i;		// Looping var
+    const unsigned char	*lineptr;	// Pointer into line
+    unsigned char	buffer[300],
+			*bufptr;	// Pointer into buffer
+
+    for (i = options->header.cupsBytesPerLine, lineptr = line, bufptr = buffer; i > 0; i --)
+      *bufptr++ = ~*lineptr++;
+
+    papplDevicePrintf(device, "GW0,%u,%u,1\n", y, options->header.cupsBytesPerLine);
+    papplDeviceWrite(device, buffer, options->header.cupsBytesPerLine);
+    papplDevicePuts(device, "\n");
+  }
 
   return (true);
 }
