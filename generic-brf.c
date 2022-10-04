@@ -25,11 +25,9 @@ static bool	brf_gen_rwriteline(pappl_job_t *job, pappl_pr_options_t *options, pa
 
 static const char * const brf_gen_media[] =
 {       // Supported media sizes for Generic BRF printers
-  "na_ledger_11x17in",
-  "na_legal_8.5x14in",
+   "na_legal_8.5x14in",
   "na_letter_8.5x11in",
   "na_executive_7x10in",
-  "iso_a3_297x420mm",
   "iso_a4_210x297mm",
   "iso_a5_148x210mm",
   "jis_b5_182x257mm",
@@ -74,17 +72,35 @@ brf_gen(
   memcpy(data->media, brf_gen_media, sizeof(brf_gen_media));
   
     papplCopyString(data->media_default.size_name,"iso_a4_210x297mm", sizeof(data->media_default.size_name));
-    data->media_default.size_width  = 1 * 2480;
-    data->media_default.size_length = 1 * 3580;
-  data->bottom_top = data->left_right = 1;
+    data->media_default.size_width  = 1 * 210;
+    data->media_default.size_length = 1 * 297;
+  data->left_right = 635;	 // 1/4" left and right
+  data->bottom_top = 1270;	
   
+
+
   data->media_default.bottom_margin = data->bottom_top;
   data->media_default.left_margin   = data->left_right;
   data->media_default.right_margin  = data->left_right;
 
   data->media_default.top_margin = data->bottom_top;
-
-
+    /* Three paper trays (MSN names) */
+    data->num_source = 3;
+    data->source[0]  = "tray-1";
+    data->source[1]  = "manual";
+    data->source[2]  = "envelope";
+    //a types (MSN names) */
+    data->num_type = 8;
+    data->type[0]  = "stationery";
+    data->type[1]  = "stationery-inkjet";
+    data->type[2]  = "stationery-letterhead";
+    data->type[3]  = "cardstock";
+    data->type[4]  = "labels";
+    data->type[5]  = "envelope";
+    data->type[6]  = "transparency";
+    data->type[7]  = "photographic";
+  papplCopyString(data->media_default.source, "tray-1", sizeof(data->media_default.source));
+  papplCopyString(data->media_default.type, "labels", sizeof(data->media_default.type));
   data->media_ready[0] = data->media_default;
 
   return (true);
