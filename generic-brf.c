@@ -5,6 +5,7 @@
 //
 
 #include <pappl/pappl.h>
+#include<math.h>
 
 //
 // Local globals...
