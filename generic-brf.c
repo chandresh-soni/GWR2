@@ -72,8 +72,8 @@ brf_gen(
   memcpy(data->media, brf_gen_media, sizeof(brf_gen_media));
   
     papplCopyString(data->media_default.size_name,"iso_a4_210x297mm", sizeof(data->media_default.size_name));
-    data->media_default.size_width  = 1 * 210;
-    data->media_default.size_length = 1 * 297;
+    data->media_default.size_width  = 1 * 21000;
+    data->media_default.size_length = 1 * 29700;
   data->left_right = 635;	 // 1/4" left and right
   data->bottom_top = 1270;	
   
