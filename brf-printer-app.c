@@ -249,14 +249,12 @@ mime_cb(const unsigned char *header,	// I - Header data
         size_t              headersize,	// I - Size of header data
         void                *cbdata)	// I - Callback data (not used)
 {
-  char	testpage[] = brf_TESTPAGE_HEADER;
-					// Test page file header
 
 
-  if (headersize >= sizeof(testpage) && !memcmp(header, testpage, sizeof(testpage)))
+
+
     return (brf_TESTPAGE_MIMETYPE);
-  else
-    return (NULL);
+  
 }
 
 
