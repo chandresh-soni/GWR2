@@ -21,6 +21,7 @@ extern char* strdup(const char*);
 //
 // Local functions...
 //
+static bool BRFTestFilterCB(pappl_job_t *job,  pappl_device_t *device,void *cbdata) ; 
 static int brf_print_filter_function(int inputfd,int outputfd, int inputseekable,cf_filter_data_t *data, void *parameters); 
 static const char *autoadd_cb(const char *device_info, const char *device_uri, const char *device_id, void *cbdata);
 static bool	driver_cb(pappl_system_t *system, const char *driver_name, const char *device_uri, const char *device_id, pappl_pr_driver_data_t *data, ipp_t **attrs, void *cbdata);
@@ -254,10 +255,8 @@ mime_cb(const unsigned char *header,	// I - Header data
         void                *cbdata)	// I - Callback data (not used)
 {
   
-
-
-
     return (brf_TESTPAGE_MIMETYPE);
+  
   
 }
 
@@ -416,7 +415,7 @@ system_cb(
   papplSystemSetHostName(system, hostname);
 
   papplSystemSetMIMECallback(system, mime_cb, NULL);
-  //papplSystemAddMIMEFilter(system, brf_TESTPAGE_MIMETYPE, "image/pwg-raster", lprintTestFilterCB, NULL);
+  papplSystemAddMIMEFilter(system, "application/pdf", brf_TESTPAGE_MIMETYPE, BRFTestFilterCB, NULL);
 
   papplSystemSetPrinterDrivers(system, (int)(sizeof(brf_drivers) / sizeof(brf_drivers[0])), brf_drivers, autoadd_cb, /*create_cb*/NULL, driver_cb, system);
 
@@ -521,8 +520,8 @@ typedef struct brf_cups_device_data_s
 
 typedef struct brf_spooling_conversion_s
 {
-  const char *srctype;                   // Input data type
-  const char *dsttype;                   // Output data type
+  char *srctype;                   // Input data type
+  char *dsttype;                   // Output data type
   int num_filters;                       // Number of filters
   cf_filter_filter_in_chain_t filters[]; // List of filters with
                                          // parameters
@@ -574,7 +573,7 @@ BRFTestFilterCB(
 
   pappl_pr_driver_data_t driver_data;
   pappl_printer_t *printer = papplJobGetPrinter(job);
-  const char device_uri = papplPrinterGetDeviceURI(printer);
+  const char *device_uri = papplPrinterGetDeviceURI(printer);
 
   // Prepare job data to be supplied to filter functions/CUPS filters
   // called during job execution
@@ -596,7 +595,7 @@ BRFTestFilterCB(
   filter_data->side_pipe[0] = -1;
   filter_data->side_pipe[1] = -1;
   filter_data->logdata = job;
-  filter_data->iscanceledfunc = papplJobIsCanceled(job); // Function to indicate
+  //filter_data->iscanceledfunc = papplJobIsCanceled(job); // Function to indicate
                                                          // whether the job got
                                                          // canceled
   filter_data->iscanceleddata = job;
