@@ -30,8 +30,7 @@ CPPFLAGS	=	'-DVERSION="$(VERSION)"' `pkg-config --cflags cups` `pkg-config --cfl
 LDFLAGS		=	$(OPTIM)
 LIBS		=	`pkg-config --libs pappl` `pkg-config --libs cups` -lm
 OPTIM		=	-Os -g
-# Uncomment the following line to enable experimental PCL 6 support
-#OPTIONS	=	-DWITH_PCL6=1
+
 
 
 
