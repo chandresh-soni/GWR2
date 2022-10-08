@@ -14,7 +14,7 @@ connected via network or USB.  Features include:
 > Note: Please use the Github issue tracker to report issues or request
 > features/improvements in `brf-printer-app`:
 >
-> <https://github.com/michaelrsweet/hp-printer-app/issues>
+> <https://github.com/Chandresh2702/Braille-printer-app/issues>
 
 
 Requirements
