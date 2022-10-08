@@ -80,7 +80,7 @@ specify a printer and "-o" to specify a named option with a value, for example:
 
 - `brf-printer-app -d myprinter somefile.brf`: Print a file to the printer named
   "myprinter".
-- `hp-printer-app -o media=na_letter_8.5x11in picture.brf`: Print a media to a US
+- `brf-printer-app -o media=na_letter_8.5x11in picture.brf`: Print a media to a US
   letter sheet.
 - `brf-printer-app default -d myprinter`: Set "myprinter" as the default printer.
 
