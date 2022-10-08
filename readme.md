@@ -80,7 +80,7 @@ specify a printer and "-o" to specify a named option with a value, for example:
 
 - `brf-printer-app -d myprinter somefile.brf`: Print a file to the printer named
   "myprinter".
-- `brf-printer-app -o media=na_letter_8.5x11in picture.brf`: Print a media to a US
+- `hp-printer-app -o media=na_letter_8.5x11in picture.brf`: Print a media to a US
   letter sheet.
 - `brf-printer-app default -d myprinter`: Set "myprinter" as the default printer.
 
@@ -116,17 +116,6 @@ Legal Stuff
 -----------
 
 The Braille Printer Application is Copyright © 2022 by Chandresh Soni.
-
-Some of the refrence have been taken from pappl-retrofit.(https://github.com/OpenPrinting/pappl-retrofit) which is Copyright © 2022 by openprinting.
-
-Filter used to convert various file format are in cups-filter is Copyright © 2022 by Samuel Thibault (samuel.thibault@ens-lyon.org).
-
-It is derived from the HP PCL Printer Application, a first working model of
-a raster Printer Application using PAPPL. It is available here:
-
-https://github.com/michaelrsweet/hp-printer-apps 
-
-The HP PCL Printer Application is Copyright © 2019-2020 by Michael R Sweet.
 
 This software is licensed under the Apache License Version 2.0.  See the files
 "LICENSE" and "NOTICE" for more information.

@@ -26,9 +26,9 @@ unitdir 	=	`pkg-config --variable=systemdsystemunitdir systemd`
 # Compiler/linker options...
 CSFLAGS		=	-s "$${CODESIGN_IDENTITY:=-}" --timestamp -o runtime
 CFLAGS		=	$(CPPFLAGS) $(OPTIM)
-CPPFLAGS	=	'-DVERSION="$(VERSION)"' `pkg-config --cflags cups` `pkg-config --cflags pappl` $(OPTIONS)
+CPPFLAGS	=	'-DVERSION="$(VERSION)"' `pkg-config --cflags cups` `pkg-config --cflags libcupsfilter``pkg-config --cflags pappl` $(OPTIONS)
 LDFLAGS		=	$(OPTIM)
-LIBS		=	`pkg-config --libs pappl` `pkg-config --libs cups` -lm
+LIBS		=	`pkg-config --libs pappl` `pkg-config --libs libcupsfilter` `pkg-config --libs cups` -lm
 OPTIM		=	-Os -g
 
 
