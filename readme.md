@@ -28,7 +28,7 @@ Requirements
 - A C99 compiler (both Clang and GCC are known to work),
 - [PAPPL](https://www.msweet.org/pappl) 1.1 or later.
 - [CUPS](https://openprinting.github.io/cups) 2.2 or later (for libcups).
-- .[CUPS-FILTER](https://github.com/OpenPrinting/cups-filters) 1.28.16 or later .
+- [CUPS-FILTER](https://github.com/OpenPrinting/cups-filters) 1.28.16 or later.
 
 
 Installing
