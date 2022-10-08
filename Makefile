@@ -1,7 +1,7 @@
 #
-# Makefile for the HP Printer Application
+# Makefile for the Braille Printer Application
 #
-# Copyright © 2020-2022 by Michael R Sweet
+# Copyright © 2022 Chandresh Soni
 #
 # Licensed under Apache License v2.0.  See the file "LICENSE" for more
 # information.
