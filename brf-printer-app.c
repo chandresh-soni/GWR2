@@ -536,7 +536,7 @@ static brf_spooling_conversion_t brf_convert_pdf_to_brf =
           {
           ppdFilterExternalCUPS,
           NULL,
-          "berftotext"
+          "txttobrf"
           }
         }
      };
