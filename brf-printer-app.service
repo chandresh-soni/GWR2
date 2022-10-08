@@ -1,5 +1,5 @@
 [Unit]
-Description=BRF Printer Application
+Description=braille Printer Application
 
 [Service]
 ExecStart=brf-printer-app server
