@@ -47,62 +47,62 @@ brf_gen(
     const char             *driver_name,// I - Driver name
     const char             *device_uri,	// I - Device URI
     const char             *device_id,	// I - 1284 device ID
-    pappl_pr_driver_data_t *data,	// I - Pointer to driver data
+    pappl_pr_driver_data_t *driver_data,	// I - Pointer to driver data
     ipp_t                  **attrs,	// O - Pointer to driver attributes
     void                   *cbdata)	// I - Callback data (not used)
 {
-  data->printfile_cb  = brf_gen_printfile;
-  data->rendjob_cb    = brf_gen_rendjob;
-  data->rendpage_cb   = brf_gen_rendpage;
-  data->rstartjob_cb  = brf_gen_rstartjob;
-  data->rstartpage_cb = brf_gen_rstartpage;
-  data->rwriteline_cb = brf_gen_rwriteline;
-  data->status_cb     = brf_gen_status;
-  data->format        = "application/vnd.cups-paged-brf";
+  driver_data->printfile_cb  = brf_gen_printfile;
+  driver_data->rendjob_cb    = brf_gen_rendjob;
+  driver_data->rendpage_cb   = brf_gen_rendpage;
+  driver_data->rstartjob_cb  = brf_gen_rstartjob;
+  driver_data->rstartpage_cb = brf_gen_rstartpage;
+  driver_data->rwriteline_cb = brf_gen_rwriteline;
+  driver_data->status_cb     = brf_gen_status;
+  driver_data->format        = "application/vnd.cups-paged-brf";
 
-  data->num_resolution = 1;
-  data->x_resolution[0] = 200;
-  data->y_resolution[0] = 200;
-  // data->x_resolution[1] = 300;
-  // data->y_resolution[1] = 300;
+  driver_data->num_resolution = 1;
+  driver_data->x_resolution[0] = 200;
+  driver_data->y_resolution[0] = 200;
+  // driver_data->x_resolution[1] = 300;
+  // driver_data->y_resolution[1] = 300;
 
-  data->x_default = data->y_default = data->x_resolution[0];
+  driver_data->x_default = driver_data->y_default = driver_data->x_resolution[0];
 
   
-  data->num_media = (int)(sizeof(brf_gen_media) / sizeof(brf_gen_media[0]));
-  memcpy(data->media, brf_gen_media, sizeof(brf_gen_media));
+  driver_data->num_media = (int)(sizeof(brf_gen_media) / sizeof(brf_gen_media[0]));
+  memcpy(driver_data->media, brf_gen_media, sizeof(brf_gen_media));
   
-    papplCopyString(data->media_default.size_name,"iso_a4_210x297mm", sizeof(data->media_default.size_name));
-    data->media_default.size_width  = 1 * 21000;
-    data->media_default.size_length = 1 * 29700;
-  data->left_right = 635;	 // 1/4" left and right
-  data->bottom_top = 1270;	
+    papplCopyString(driver_data->media_default.size_name,"iso_a4_210x297mm", sizeof(driver_data->media_default.size_name));
+    driver_data->media_default.size_width  = 1 * 21000;
+    driver_data->media_default.size_length = 1 * 29700;
+  driver_data->left_right = 635;	 // 1/4" left and right
+  driver_data->bottom_top = 1270;	
   
 
 
-  data->media_default.bottom_margin = data->bottom_top;
-  data->media_default.left_margin   = data->left_right;
-  data->media_default.right_margin  = data->left_right;
+  driver_data->media_default.bottom_margin = driver_data->bottom_top;
+  driver_data->media_default.left_margin   = driver_data->left_right;
+  driver_data->media_default.right_margin  = driver_data->left_right;
 
-  data->media_default.top_margin = data->bottom_top;
+  driver_data->media_default.top_margin = driver_data->bottom_top;
     /* Three paper trays (MSN names) */
-    data->num_source = 3;
-    data->source[0]  = "tray-1";
-    data->source[1]  = "manual";
-    data->source[2]  = "envelope";
+    driver_data->num_source = 3;
+    driver_data->source[0]  = "tray-1";
+    driver_data->source[1]  = "manual";
+    driver_data->source[2]  = "envelope";
     //a types (MSN names) */
-    data->num_type = 8;
-    data->type[0]  = "stationery";
-    data->type[1]  = "stationery-inkjet";
-    data->type[2]  = "stationery-letterhead";
-    data->type[3]  = "cardstock";
-    data->type[4]  = "labels";
-    data->type[5]  = "envelope";
-    data->type[6]  = "transparency";
-    data->type[7]  = "photographic";
-  papplCopyString(data->media_default.source, "tray-1", sizeof(data->media_default.source));
-  papplCopyString(data->media_default.type, "labels", sizeof(data->media_default.type));
-  data->media_ready[0] = data->media_default;
+    driver_data->num_type = 8;
+    driver_data->type[0]  = "stationery";
+    driver_data->type[1]  = "stationery-inkjet";
+    driver_data->type[2]  = "stationery-letterhead";
+    driver_data->type[3]  = "cardstock";
+    driver_data->type[4]  = "labels";
+    driver_data->type[5]  = "envelope";
+    driver_data->type[6]  = "transparency";
+    driver_data->type[7]  = "photographic";
+  papplCopyString(driver_data->media_default.source, "tray-1", sizeof(driver_data->media_default.source));
+  papplCopyString(driver_data->media_default.type, "labels", sizeof(driver_data->media_default.type));
+  driver_data->media_ready[0] = driver_data->media_default;
 
   return (true);
 }
