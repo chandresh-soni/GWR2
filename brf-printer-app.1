@@ -11,7 +11,7 @@ brf-printer-app \- braille printer application
 .B brf-printer-app
 is a printer application that can be run standalone or as a dedicated IPP Everywhere network service.
 .B brf-printer-app
-supports printing JPEG images, PNG images, Apple/PWG raster files, and printer-specific files to USB and network PCL printers.
+supports printing brf, ubrl , pdf and printer-specific files to USB and network printers.
 If no sub-command is specified, "submit" is assumed.
 .SH SUB-COMMANDS
 The following sub-commands are recognized by
@@ -77,7 +77,7 @@ Specifies the job ID ("cancel" sub-command).
 \fB\-m \fIDRIVER-NAME\fR
 Specifies the driver name ("add" sub-command).
 .B brf-printer-app
-supports the "pcl_deskjet" (HP DeskJet, OfficeJet, and Photosmart printers), "pcl_laserjet" (HP LaserJet printers), and "pcl_generic" (PCL-compatible laser printers from other vendors) driver names.
+supports the "generic braille embosser" driver.
 .TP 5
 \fB\-n \fICOPIES\fR
 Specifies the number of copies.
@@ -113,13 +113,11 @@ Print images in reverse-landscape (90 degrees clockwise) orientation.
 Print images in automatic (portrait or landscape) orientation.
 .TP 5
 .B \-o print-color-mode=auto
-Print in color or grayscale as needed.
+Print in grayscale as needed.
 .TP 5
 .B \-o print-color-mode=monochrome
 Print in grayscale.
-.TP 5
-.B \-o print-color-mode=color
-Print in color (HP DeskJet/Photosmart printers only).
+
 .TP 5
 .B \-o print-content-optimize=auto
 Optimize printing automatically based on the type and content of the file.
@@ -180,22 +178,22 @@ Specifies an "ipp:" or "ipps:" printer/server.
 \fB\-v \fIDEVICE-URI\fR
 Specifies a "socket:" or "usb:" device ("add" sub-command).
 .SH EXAMPLES
-Add a PCL laser printer "laser" at IP address 11.22.33.44:
+Add a Braille printer "Braille" at IP address 11.22.33.44:
 
 .nf
-brf-printer-app add -v socket://11.22.33.44 -m pcl_laserjet -d laser
+brf-printer-app add -v socket://11.22.33.44 -m b brf_gen -d Braille
 .fi
 
-Print a PCL file to the printer:
+Print a brf file to the printer:
 
 .nf
-brf-printer-app -d laser filename.pcl
+brf-printer-app -d  filbraillename.brf
 .fi
 
 Print a photo to US Letter media:
 
 .nf
-brf-printer-app -d laser -o media=na_letter_8.5x11in -o print-quality=high photo.jpg
+brf-printer-app -d B -o braille media=na_letter_8.5x11in -o print-quality=high photo.jpg
 .fi
 
 List supported options:
@@ -228,7 +226,6 @@ List network and USB printers that can be added:
 brf-printer-app devices
 .fi
 
-.SH SEE ALSO
-https://www.msweet.org/brf-printer-app
+
 .SH COPYRIGHT
-Copyright \[co] 2019-2022 by Michael R Sweet.
+Copyright \[co] 2022 by Chandresh Soni.
