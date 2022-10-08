@@ -115,7 +115,7 @@ The following printers are currently supported:
 Legal Stuff
 -----------
 
-The Braille Printer Application is Copyright © 2022-2023 by Chandresh Soni.
+The Braille Printer Application is Copyright © 2022 by Chandresh Soni.
 
 This software is licensed under the Apache License Version 2.0.  See the files
 "LICENSE" and "NOTICE" for more information.
