@@ -1,7 +1,5 @@
-BRF Printer Application
+Braille Printer Application
 ======================
-
-
 
 `brf-printer-app` implements printing for a variety of common Braille printers
 connected via network or USB.  Features include:
@@ -86,7 +84,7 @@ specify a printer and "-o" to specify a named option with a value, for example:
   letter sheet.
 - `brf-printer-app default -d myprinter`: Set "myprinter" as the default printer.
 
-See the `brfprinter-app` man page for more examples.
+See the `brf-printer-app` man page for more examples.
 
 
 Running the Server
@@ -117,7 +115,7 @@ The following printers are currently supported:
 Legal Stuff
 -----------
 
-The BRF Printer Application is Copyright © 2022-2023 by Chandresh Soni.
+The Braille Printer Application is Copyright © 2022-2023 by Chandresh Soni.
 
 This software is licensed under the Apache License Version 2.0.  See the files
 "LICENSE" and "NOTICE" for more information.
