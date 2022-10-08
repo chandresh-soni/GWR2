@@ -1,6 +1,6 @@
 BRF Printer Application
 ======================
-![Apache 2.0](https://img.shields.io/github/license/chandresh2702/GWR2)
+
 
 
 `brf-printer-app` implements printing for a variety of common Braille printers
