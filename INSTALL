@@ -1,0 +1,109 @@
+INSTALL - OpenPrinting Braille Printer Application v2.0b1 - 2022-11-18
+----------------------------------------------------------------------
+
+This file describes how to compile and install OpenPrinting
+braille-printer-app from source code. For more information on
+OpenPrinting braille-printer-app see the file called "README.md". A
+complete change log can be found in "CHANGES.md".
+
+
+BEFORE YOU BEGIN
+
+    You'll need ANSI-compliant C and C++ compilers, plus a make program and
+    POSIX-compliant shell (/bin/sh).  The GNU compiler tools and Bash work well
+    and we have tested the current CUPS code against several versions of GCC
+    with excellent results.
+
+    The Makefiles used by the project should work with most versions of make.
+    We've tested them with GNU make as well as the make programs shipped by
+    Compaq, HP, SGI, and Sun.  BSD users should use GNU make (gmake) since BSD
+    make does not support "include".
+
+    CUPS (2.2.2 or newer), libcupsfilters 2.x, and libppd must be
+    installed to be able to compile this package.
+
+COMPILING THE GIT REPOSITORY CODE
+
+    The braille-printer-app GIT repository doesn't hold a copy of the pre-built
+    configure script.  You'll need to run the GNU autoconf software (2.65 or
+    higher) to create it:
+
+        ./autogen.sh
+
+
+CONFIGURATION
+
+    braille-printer-app uses GNU autoconf, so you should find the
+    usual "configure" script in the main braille-printer-app source
+    directory. To configure braille-printer-app for your system,
+    type:
+
+	./configure
+
+    The default installation will put the braille-printer-app software in the
+    "/usr" directory on your system.
+
+    Use the "--prefix" option to install the braille-printer-app
+    software in another location:
+
+	./configure --prefix=/some/directory
+
+    To see a complete list of configuration options, use the --help option:
+
+        ./configure --help
+
+    If any of the dependent libraries are not installed in a system default
+    location (typically "/usr/include" and "/usr/lib") you'll need to set the
+    CFLAGS, CPPFLAGS, CXXFLAGS, DSOFLAGS, and LDFLAGS environment variables
+    prior to running configure:
+
+	setenv CFLAGS "-I/some/directory"
+	setenv CPPFLAGS "-I/some/directory"
+	setenv CXXFLAGS "-I/some/directory"
+	setenv DSOFLAGS "-L/some/directory"
+	setenv LDFLAGS "-L/some/directory"
+	./configure ...
+
+    or:
+
+	CFLAGS="-I/some/directory" \
+	CPPFLAGS="-I/some/directory" \
+	CXXFLAGS="-I/some/directory" \
+	DSOFLAGS="-L/some/directory" \
+	LDFLAGS="-L/some/directory" \
+	./configure ...
+
+    Once you have configured things, just type:
+
+	make ENTER
+
+    or if you have FreeBSD, NetBSD, or OpenBSD type:
+
+	gmake ENTER
+
+    to build the software.
+
+INSTALLING THE SOFTWARE
+
+    Once you have built the software you need to install it.  The "install"
+    target provides a quick way to install the software on your local system:
+
+	make install ENTER
+
+    or for FreeBSD, NetBSD, or OpenBSD:
+
+	gmake install ENTER
+
+PACKAGING THE SOFTWARE FOR OPERATING SYSTEM DISTRIBUTIONS
+
+    This Braille embosser support package is important for
+    accessibility, for written, paper-based communication with blind
+    people. So it is highly recommended for desktop distributions and
+    generally distributions with a CUPS printing stack.
+
+    In addition to the package itself cups-filters 2.x, liblouis,
+    ImageMagick, and poppler-utils need to be installed. Recommended
+    is to also have liblouisutdml, antiword, docx2txt for more
+    sophisticated Braille generation representing also the formatting
+    of the input text. None of these is needed for compiling
+    braille-printer-app.
