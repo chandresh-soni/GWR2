@@ -574,6 +574,8 @@ BRFTestFilterCB(
   pappl_pr_driver_data_t driver_data;
   pappl_printer_t *printer = papplJobGetPrinter(job);
   const char *device_uri = papplPrinterGetDeviceURI(printer);
+  spooling_conversions = cupsArrayNew(NULL, NULL);
+  cupsArrayAdd(spooling_conversions, &brf_convert_pdf_to_brf);
 
   // Prepare job data to be supplied to filter functions/CUPS filters
   // called during job execution
