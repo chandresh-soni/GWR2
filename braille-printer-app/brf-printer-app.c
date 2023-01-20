@@ -527,6 +527,14 @@ typedef struct brf_spooling_conversion_s
                                          // parameters
 } brf_spooling_conversion_t;
 
+static cf_filter_external_t filter_data_ext =
+    {
+      "usr/lib/cups/filter/txttobrf",
+      0,
+      0,
+      NULL,
+      NULL
+    };
 static brf_spooling_conversion_t brf_convert_pdf_to_brf =
     {
         "application/pdf",
@@ -535,13 +543,7 @@ static brf_spooling_conversion_t brf_convert_pdf_to_brf =
         {
           {
             cfFilterExternal,
-            {
-              "usr/lib/cups/filter/txttobrf",
-              0,
-              0,
-              NULL,
-              NULL
-            },
+            (void *)(&filter_data_ext),
             "txttobrf"
           }
         }
@@ -559,7 +561,6 @@ BRFTestFilterCB(
   cf_filter_filter_in_chain_t *chain_filter, // Filter from PPD file
       *print;
   brf_cups_device_data_t *device_data = NULL;
-  cf_filter_external_t *filter_data_ext;
   brf_print_filter_function_data_t *print_params;
   brf_printer_app_global_data_t *global_data;
   cf_filter_data_t *filter_data;
