@@ -534,13 +534,18 @@ static brf_spooling_conversion_t brf_convert_pdf_to_brf =
         1,
         {
           {
-          cfFilterExternal,
-          NULL,
-          "txttobrf"
+            cfFilterExternal,
+            {
+              "usr/lib/cups/filter/txttobrf",
+              0,
+              0,
+              NULL,
+              NULL
+            },
+            "txttobrf"
           }
         }
      };
-
 
 bool // O - `true` on success, `false` on failure
 BRFTestFilterCB(
@@ -632,15 +637,7 @@ BRFTestFilterCB(
   informat = papplJobGetFormat(job);
   papplLogJob(job, PAPPL_LOGLEVEL_DEBUG,
               "Input file format: %s", informat);
-  //
-  // Passing values to ppdFilterExternalCUPS()
-  //
-  filter_data_ext = (cf_filter_external_t *)calloc(1, sizeof(cf_filter_external_t));
-  
-  filter_data_ext->filter = "usr/lib/cups/filter/txttobrf"; 
-  filter_data_ext->num_options =0;
-  filter_data_ext->options = NULL;
-  filter_data_ext->envp= NULL;
+ 
 
 
   //
@@ -693,7 +690,7 @@ BRFTestFilterCB(
 
   for (int i = 0; i < conversion->num_filters; i++){
     cupsArrayAdd(chain, &(conversion->filters[i]));
-    cupsArrayAdd(chain,&(filter_data_ext));
+   
     }
     
     chain_filter = NULL;
